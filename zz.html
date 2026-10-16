@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Result Management System</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #333;
+        }
+
+        header {
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin-bottom: 8px;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 25px auto;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        .card h2 {
+            color: #2563eb;
+            font-size: 28px;
+            margin-top: 8px;
+        }
+
+        .form-section,
+        .table-section,
+        .result-section {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            margin-bottom: 20px;
+            color: #1e3a8a;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input,
+        select {
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #2563eb;
+        }
+
+        .subjects {
+            margin-top: 20px;
+        }
+
+        .subject-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .button-group {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            border: none;
+            padding: 11px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            color: white;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-success {
+            background: #16a34a;
+        }
+
+        .btn-danger {
+            background: #dc2626;
+        }
+
+        .btn-warning {
+            background: #f59e0b;
+        }
+
+        .btn-secondary {
+            background: #64748b;
+        }
+
+        .search-box {
+            margin-bottom: 15px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background: #2563eb;
+            color: white;
+        }
+
+        tr:hover {
+            background: #f1f5f9;
+        }
+
+        .pass {
+            color: #16a34a;
+            font-weight: bold;
+        }
+
+        .fail {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .result-card {
+            border: 2px solid #2563eb;
+            padding: 25px;
+            max-width: 700px;
+            margin: auto;
+        }
+
+        .result-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .result-header h2 {
+            color: #1e40af;
+        }
+
+        .student-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .summary div {
+            padding: 15px;
+            background: #eff6ff;
+            text-align: center;
+            border-radius: 6px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #1e293b;
+            color: white;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 800px) {
+            .dashboard,
+            .form-grid,
+            .subject-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .dashboard,
+            .form-grid,
+            .subject-grid,
+            .student-info,
+            .summary {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            th,
+            td {
+                padding: 7px;
+            }
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+
+            .result-section,
+            .result-section * {
+                visibility: visible;
+            }
+
+            .result-section {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                box-shadow: none;
+            }
+
+            .print-button {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Student Result Management System</h1>
+    <p>Manage student academic results efficiently</p>
+</header>
+
+<div class="container">
+
+    <!-- Dashboard -->
+    <div class="dashboard">
+        <div class="card">
+            <p>Total Students</p>
+            <h2 id="totalStudents">0</h2>
+        </div>
+
+        <div class="card">
+            <p>Passed</p>
+            <h2 id="passedStudents">0</h2>
+        </div>
+
+        <div class="card">
+            <p>Failed</p>
+            <h2 id="failedStudents">0</h2>
+        </div>
+
+        <div class="card">
+            <p>Pass Percentage</p>
+            <h2 id="passPercentage">0%</h2>
+        </div>
+    </div>
+
+    <!-- Student Form -->
+    <section class="form-section">
+        <h2 class="section-title">Add / Update Student Result</h2>
+
+        <form id="studentForm">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label for="rollNo">Roll Number</label>
+                    <input type="text" id="rollNo" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="studentName">Student Name</label>
+                    <input type="text" id="studentName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="course">Course / Class</label>
+                    <input type="text" id="course" required>
+                </div>
+
+            </div>
+
+            <div class="subjects">
+
+                <h3>Subject Marks</h3>
+
+                <div class="subject-grid">
+
+                    <div class="form-group">
+                        <label for="math">Mathematics</label>
+                        <input type="number" id="math" min="0" max="100" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="science">Science</label>
+                        <input type="number" id="science" min="0" max="100" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="english">English</label>
+                        <input type="number" id="english" min="0" max="100" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="social">Social Studies</label>
+                        <input type="number" id="social" min="0" max="100" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="computer">Computer</label>
+                        <input type="number" id="computer" min="0" max="100" required>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="button-group">
+                <button type="submit" class="btn-primary" id="submitButton">
+                    Save Result
+                </button>
+
+                <button type="button" class="btn-secondary" onclick="resetForm()">
+                    Clear
+                </button>
+            </div>
+
+        </form>
+    </section>
+
+    <!-- Student Records -->
+    <section class="table-section">
+
+        <h2 class="section-title">Student Records</h2>
+
+        <input
+            type="text"
+            id="searchInput"
+            class="search-box"
+            placeholder="Search by name or roll number..."
+            onkeyup="displayStudents()"
+        >
+
+        <div style="overflow-x:auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Roll No</th>
+                        <th>Name</th>
+                        <th>Course</th>
+                        <th>Total</th>
+                        <th>Percentage</th>
+                        <th>Grade</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody id="studentTableBody"></tbody>
+            </table>
+        </div>
+
+    </section>
+
+    <!-- Result Card -->
+    <section class="result-section hidden" id="resultSection">
+
+        <div class="result-card" id="resultCard">
+
+            <div class="result-header">
+                <h2>Student Mark Sheet</h2>
+                <p>Student Result Management System</p>
+            </div>
+
+            <div class="student-info">
+                <p><strong>Roll Number:</strong> <span id="resultRoll"></span></p>
+                <p><strong>Name:</strong> <span id="resultName"></span></p>
+                <p><strong>Course:</strong> <span id="resultCourse"></span></p>
+                <p><strong>Status:</strong> <span id="resultStatus"></span></p>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Marks</th>
+                        <th>Maximum</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>Mathematics</td>
+                        <td id="resultMath"></td>
+                        <td>100</td>
+                    </tr>
+
+                    <tr>
+                        <td>Science</td>
+                        <td id="resultScience"></td>
+                        <td>100</td>
+                    </tr>
+
+                    <tr>
+                        <td>English</td>
+                        <td id="resultEnglish"></td>
+                        <td>100</td>
+                    </tr>
+
+                    <tr>
+                        <td>Social Studies</td>
+                        <td id="resultSocial"></td>
+                        <td>100</td>
+                    </tr>
+
+                    <tr>
+                        <td>Computer</td>
+                        <td id="resultComputer"></td>
+                        <td>100</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="summary">
+
+                <div>
+                    <strong>Total</strong>
+                    <p id="resultTotal"></p>
+                </div>
+
+                <div>
+                    <strong>Percentage</strong>
+                    <p id="resultPercentage"></p>
+                </div>
+
+                <div>
+                    <strong>Grade</strong>
+                    <p id="resultGrade"></p>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="button-group" style="justify-content:center;">
+            <button class="btn-primary print-button" onclick="window.print()">
+                Print Result
+            </button>
+
+            <button class="btn-secondary print-button" onclick="closeResult()">
+                Close
+            </button>
+        </div>
+
+    </section>
+
+</div>
+
+<footer>
+    <p>&copy; 2026 Student Result Management System</p>
+</footer>
+
+<script>
+
+    // Get students from localStorage
+    let students = JSON.parse(localStorage.getItem("students")) || [];
+
+    let editIndex = -1;
+
+    const form = document.getElementById("studentForm");
+
+    // Calculate grade
+    function calculateGrade(percentage) {
+
+        if (percentage >= 90) return "A+";
+        if (percentage >= 80) return "A";
+        if (percentage >= 70) return "B";
+        if (percentage >= 60) return "C";
+        if (percentage >= 50) return "D";
+        if (percentage >= 40) return "E";
+
+        return "F";
+    }
+
+    // Calculate status
+    function calculateStatus(marks) {
+
+        // Minimum 35 marks required in every subject
+        const passed = marks.every(mark => mark >= 35);
+
+        return passed ? "Pass" : "Fail";
+    }
+
+    // Save student
+    form.addEventListener("submit", function(event) {
+
+        event.preventDefault();
+
+        const rollNo = document.getElementById("rollNo").value.trim();
+        const studentName = document.getElementById("studentName").value.trim();
+        const course = document.getElementById("course").value.trim();
+
+        const marks = [
+            Number(document.getElementById("math").value),
+            Number(document.getElementById("science").value),
+            Number(document.getElementById("english").value),
+            Number(document.getElementById("social").value),
+            Number(document.getElementById("computer").value)
+        ];
+
+        // Check duplicate roll number
+        const duplicate = students.some((student, index) =>
+            student.rollNo === rollNo && index !== editIndex
+        );
+
+        if (duplicate) {
+            alert("A student with this roll number already exists.");
+            return;
+        }
+
+        const total = marks.reduce((sum, mark) => sum + mark, 0);
+        const percentage = (total / 500) * 100;
+        const grade = calculateGrade(percentage);
+        const status = calculateStatus(marks);
+
+        const student = {
+            rollNo,
+            studentName,
+            course,
+            marks,
+            total,
+            percentage: percentage.toFixed(2),
+            grade,
+            status
+        };
+
+        if (editIndex === -1) {
+            students.push(student);
+            alert("Student result saved successfully!");
+        } else {
+            students[editIndex] = student;
+            alert("Student result updated successfully!");
+            editIndex = -1;
+        }
+
+        saveData();
+        displayStudents();
+        updateDashboard();
+        resetForm();
+
+    });
+
+    // Save data
+    function saveData() {
+        localStorage.setItem("students", JSON.stringify(students));
+    }
+
+    // Display students
+    function displayStudents() {
+
+        const tableBody = document.getElementById("studentTableBody");
+        const search = document.getElementById("searchInput").value.toLowerCase();
+
+        tableBody.innerHTML = "";
+
+        const filteredStudents = students.filter(student =>
+            student.studentName.toLowerCase().includes(search) ||
+            student.rollNo.toLowerCase().includes(search)
+        );
+
+        if (filteredStudents.length === 0) {
+
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="8">No student records found.</td>
+                </tr>
+            `;
+
+            return;
+        }
+
+        filteredStudents.forEach((student) => {
+
+            const originalIndex = students.indexOf(student);
+
+            const row = document.createElement("tr");
+
+            row.innerHTML = `
+                <td>${student.rollNo}</td>
+                <td>${student.studentName}</td>
+                <td>${student.course}</td>
+                <td>${student.total}/500</td>
+                <td>${student.percentage}%</td>
+                <td>${student.grade}</td>
+                <td class="${student.status === "Pass" ? "pass" : "fail"}">
+                    ${student.status}
+                </td>
+
+                <td>
+                    <button class="btn-success"
+                        onclick="viewResult(${originalIndex})">
+                        View
+                    </button>
+
+                    <button class="btn-warning"
+                        onclick="editStudent(${originalIndex})">
+                        Edit
+                    </button>
+
+                    <button class="btn-danger"
+                        onclick="deleteStudent(${originalIndex})">
+                        Delete
+                    </button>
+                </td>
+            `;
+
+            tableBody.appendChild(row);
+        });
+    }
+
+    // Edit student
+    function editStudent(index) {
+
+        const student = students[index];
+
+        document.getElementById("rollNo").value = student.rollNo;
+        document.getElementById("studentName").value = student.studentName;
+        document.getElementById("course").value = student.course;
+
+        document.getElementById("math").value = student.marks[0];
+        document.getElementById("science").value = student.marks[1];
+        document.getElementById("english").value = student.marks[2];
+        document.getElementById("social").value = student.marks[3];
+        document.getElementById("computer").value = student.marks[4];
+
+        editIndex = index;
+
+        document.getElementById("submitButton").textContent = "Update Result";
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    }
+
+    // Delete student
+    function deleteStudent(index) {
+
+        const student = students[index];
+
+        const confirmation = confirm(
+            `Are you sure you want to delete ${student.studentName}'s result?`
+        );
+
+        if (!confirmation) return;
+
+        students.splice(index, 1);
+
+        saveData();
+        displayStudents();
+        updateDashboard();
+    }
+
+    // View result
+    function viewResult(index) {
+
+        const student = students[index];
+
+        document.getElementById("resultRoll").textContent = student.rollNo;
+        document.getElementById("resultName").textContent = student.studentName;
+        document.getElementById("resultCourse").textContent = student.course;
+
+        document.getElementById("resultMath").textContent = student.marks[0];
+        document.getElementById("resultScience").textContent = student.marks[1];
+        document.getElementById("resultEnglish").textContent = student.marks[2];
+        document.getElementById("resultSocial").textContent = student.marks[3];
+        document.getElementById("resultComputer").textContent = student.marks[4];
+
+        document.getElementById("resultTotal").textContent =
+            `${student.total} / 500`;
+
+        document.getElementById("resultPercentage").textContent =
+            `${student.percentage}%`;
+
+        document.getElementById("resultGrade").textContent =
+            student.grade;
+
+        const statusElement = document.getElementById("resultStatus");
+
+        statusElement.textContent = student.status;
+        statusElement.className =
+            student.status === "Pass" ? "pass" : "fail";
+
+        document.getElementById("resultSection")
+            .classList.remove("hidden");
+
+        document.getElementById("resultSection")
+            .scrollIntoView({
+                behavior: "smooth"
+            });
+    }
+
+    // Close result
+    function closeResult() {
+
+        document.getElementById("resultSection")
+            .classList.add("hidden");
+    }
+
+    // Reset form
+    function resetForm() {
+
+        form.reset();
+
+        editIndex = -1;
+
+        document.getElementById("submitButton")
+            .textContent = "Save Result";
+    }
+
+    // Dashboard statistics
+    function updateDashboard() {
+
+        const totalStudents = students.length;
+
+        const passedStudents = students.filter(
+            student => student.status === "Pass"
+        ).length;
+
+        const failedStudents = students.filter(
+            student => student.status === "Fail"
+        ).length;
+
+        const passPercentage =
+            totalStudents === 0
+                ? 0
+                : ((passedStudents / totalStudents) * 100).toFixed(1);
+
+        document.getElementById("totalStudents")
+            .textContent = totalStudents;
+
+        document.getElementById("passedStudents")
+            .textContent = passedStudents;
+
+        document.getElementById("failedStudents")
+            .textContent = failedStudents;
+
+        document.getElementById("passPercentage")
+            .textContent = `${passPercentage}%`;
+    }
+
+    // Initial display
+    displayStudents();
+    updateDashboard();
+
+</script>
+
+</body>
+</html>

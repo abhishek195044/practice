@@ -1,0 +1,450 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #0f172a;
+            color: white;
+        }
+
+        /* LOGIN PAGE */
+        #loginPage {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #0f172a, #1e3a8a, #581c87);
+        }
+
+        .login-box {
+            width: 350px;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .login-box h1 {
+            margin-bottom: 10px;
+        }
+
+        .login-box p {
+            color: #cbd5e1;
+            margin-bottom: 25px;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 13px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 10px;
+            outline: none;
+        }
+
+        .login-box button {
+            width: 100%;
+            padding: 13px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 10px;
+            background: #38bdf8;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .login-box button:hover {
+            background: #0284c7;
+        }
+
+        #error {
+            color: #f87171;
+            margin-top: 15px;
+        }
+
+        /* PORTFOLIO */
+        #portfolio {
+            display: none;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 8%;
+            background: #020617;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav h2 {
+            color: #38bdf8;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+
+        nav ul li a:hover {
+            color: #38bdf8;
+        }
+
+        section {
+            padding: 80px 10%;
+        }
+
+        .home {
+            min-height: 90vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(135deg, #0f172a, #172554);
+        }
+
+        .home h1 {
+            font-size: 50px;
+        }
+
+        .home span {
+            color: #38bdf8;
+        }
+
+        .home p {
+            margin: 20px 0;
+            font-size: 20px;
+            color: #cbd5e1;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background: #38bdf8;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .title {
+            text-align: center;
+            color: #38bdf8;
+            margin-bottom: 40px;
+            font-size: 35px;
+        }
+
+        .about {
+            text-align: center;
+            background: #111827;
+        }
+
+        .about p {
+            max-width: 700px;
+            margin: auto;
+            line-height: 1.8;
+            color: #cbd5e1;
+        }
+
+        /* SKILLS */
+        .skills-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .skill {
+            padding: 20px 30px;
+            background: #1e293b;
+            border-radius: 10px;
+            transition: 0.3s;
+        }
+
+        .skill:hover {
+            transform: translateY(-8px);
+            background: #0369a1;
+        }
+
+        /* PROJECTS */
+        .projects-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 25px;
+        }
+
+        .project {
+            width: 280px;
+            padding: 25px;
+            background: #1e293b;
+            border-radius: 15px;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .project:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+        }
+
+        .project h3 {
+            color: #38bdf8;
+            margin-bottom: 15px;
+        }
+
+        .project p {
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
+        /* CONTACT */
+        .contact {
+            text-align: center;
+            background: #111827;
+        }
+
+        .contact p {
+            margin: 15px;
+            color: #cbd5e1;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #020617;
+            color: #94a3b8;
+        }
+
+        @media (max-width: 700px) {
+            nav {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            nav ul {
+                gap: 12px;
+            }
+
+            .home h1 {
+                font-size: 35px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- LOGIN PAGE -->
+    <div id="loginPage">
+
+        <div class="login-box">
+
+            <h1>Welcome 👋</h1>
+            <p>Login to view my portfolio</p>
+
+            <input type="text" id="username" placeholder="Enter Username">
+
+            <input type="password" id="password" placeholder="Enter Password">
+
+            <button onclick="login()">LOGIN</button>
+
+            <div id="error"></div>
+
+        </div>
+
+    </div>
+
+
+    <!-- PORTFOLIO PAGE -->
+    <div id="portfolio">
+
+        <!-- NAVIGATION -->
+        <nav>
+
+            <h2>Abhishek</h2>
+
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+
+        </nav>
+
+
+        <!-- HOME -->
+        <section class="home" id="home">
+
+            <div>
+
+                <h1>Hello, I'm <span>Abhishek</span> 👨‍💻</h1>
+
+                <p>B.Tech Student | Programmer | Web Developer</p>
+
+                <a href="#projects" class="btn">View My Projects</a>
+
+            </div>
+
+        </section>
+
+
+        <!-- ABOUT -->
+        <section class="about" id="about">
+
+            <h2 class="title">About Me</h2>
+
+            <p>
+                Hello! I am Abhishek, a B.Tech student interested in
+                programming and web development. I enjoy learning
+                new technologies and creating interesting projects
+                using HTML, CSS, JavaScript, Java and Python.
+            </p>
+
+        </section>
+
+
+        <!-- SKILLS -->
+        <section id="skills">
+
+            <h2 class="title">My Skills</h2>
+
+            <div class="skills-container">
+
+                <div class="skill">HTML</div>
+                <div class="skill">CSS</div>
+                <div class="skill">JavaScript</div>
+                <div class="skill">Java</div>
+                <div class="skill">Python</div>
+                <div class="skill">C</div>
+
+            </div>
+
+        </section>
+
+
+        <!-- PROJECTS -->
+        <section id="projects">
+
+            <h2 class="title">My Projects</h2>
+
+            <div class="projects-container">
+
+                <div class="project">
+
+                    <h3>Portfolio Website</h3>
+
+                    <p>
+                        A personal portfolio website created
+                        using HTML, CSS and JavaScript.
+                    </p>
+
+                </div>
+
+
+                <div class="project">
+
+                    <h3>Login Page</h3>
+
+                    <p>
+                        Attractive login page with username
+                        and password validation using JavaScript.
+                    </p>
+
+                </div>
+
+
+                <div class="project">
+
+                    <h3>SAPAS</h3>
+
+                    <p>
+                        Smart Academic Performance and
+                        Analytics System for students.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- CONTACT -->
+        <section class="contact" id="contact">
+
+            <h2 class="title">Contact Me</h2>
+
+            <p>📧 Email: abhishek@example.com</p>
+
+            <p>📱 Phone: +91 XXXXX XXXXX</p>
+
+            <p>📍 India</p>
+
+        </section>
+
+
+        <!-- FOOTER -->
+        <footer>
+
+            <p>© 2026 Abhishek | My Portfolio</p>
+
+        </footer>
+
+    </div>
+
+
+    <!-- JAVASCRIPT -->
+    <script>
+
+        function login() {
+
+            let username = document.getElementById("username").value;
+            let password = document.getElementById("password").value;
+
+            if (username === "admin" && password === "1234") {
+
+                document.getElementById("loginPage").style.display = "none";
+
+                document.getElementById("portfolio").style.display = "block";
+
+            } 
+            else {
+
+                document.getElementById("error").innerHTML =
+                    "❌ Invalid username or password";
+
+            }
+
+        }
+
+    </script>
+
+</body>
+</html>
+```

@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Personal Portfolio - Software Developer">
+    <title>Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- ========== TOAST NOTIFICATION ========== -->
+    <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+    <!-- ========== CONFIRMATION DIALOG ========== -->
+    <div id="confirm-dialog" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Confirmation dialog" style="display:none;">
+        <div class="modal-content confirm-dialog-content">
+            <h3 id="confirm-title">Confirm</h3>
+            <p id="confirm-message">Are you sure?</p>
+            <div class="confirm-actions">
+                <button id="confirm-cancel-btn" class="btn btn-secondary">Cancel</button>
+                <button id="confirm-ok-btn" class="btn btn-danger">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== PROJECT DETAIL MODAL ========== -->
+    <div id="project-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Project details" style="display:none;">
+        <div class="modal-content project-modal-content">
+            <button class="modal-close-btn" id="project-modal-close" aria-label="Close modal">&times;</button>
+            <div id="project-modal-body"></div>
+        </div>
+    </div>
+
+    <!-- ========== MESSAGE DETAIL MODAL ========== -->
+    <div id="message-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Message details" style="display:none;">
+        <div class="modal-content">
+            <button class="modal-close-btn" id="message-modal-close" aria-label="Close modal">&times;</button>
+            <div id="message-modal-body"></div>
+        </div>
+    </div>
+
+    <!-- ========== AUTH PAGES ========== -->
+    <!-- LOGIN PAGE -->
+    <div id="page-login" class="page auth-page" style="display:none;">
+        <div class="auth-container">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <h1>Welcome Back</h1>
+                    <p>Sign in to your account</p>
+                </div>
+                <form id="login-form" class="auth-form" novalidate>
+                    <div class="form-group">
+                        <label for="login-email">Email Address</label>
+                        <input type="email" id="login-email" required placeholder="you@example.com" autocomplete="email">
+                        <span class="field-error" id="login-email-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" required placeholder="Your password" autocomplete="current-password">
+                        <span class="field-error" id="login-password-error"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                </form>
+                <div class="auth-footer">
+                    <p>Don't have an account? <a href="#" id="goto-signup">Sign Up</a></p>
+                    <p><a href="#" id="goto-admin-login">Admin Login</a></p>
+                    <p><a href="#" id="goto-home-from-login">← Back to Portfolio</a></p>
+                </div>
+                <div class="auth-notice">
+                    <small>⚠️ This is a frontend-only demo. Authentication uses localStorage and is NOT secure for production.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SIGNUP PAGE -->
+    <div id="page-signup" class="page auth-page" style="display:none;">
+        <div class="auth-container">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <h1>Create Account</h1>
+                    <p>Join us today</p>
+                </div>
+                <form id="signup-form" class="auth-form" novalidate>
+                    <div class="form-group">
+                        <label for="signup-name">Full Name</label>
+                        <input type="text" id="signup-name" required placeholder="John Doe" maxlength="100">
+                        <span class="field-error" id="signup-name-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-email">Email Address</label>
+                        <input type="email" id="signup-email" required placeholder="you@example.com" autocomplete="email">
+                        <span class="field-error" id="signup-email-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-password">Password</label>
+                        <input type="password" id="signup-password" required placeholder="Min 6 characters" minlength="6">
+                        <span class="field-error" id="signup-password-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-confirm">Confirm Password</label>
+                        <input type="password" id="signup-confirm" required placeholder="Repeat password">
+                        <span class="field-error" id="signup-confirm-error"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+                </form>
+                <div class="auth-footer">
+                    <p>Already have an account? <a href="#" id="goto-login-from-signup">Sign In</a></p>
+                    <p><a href="#" id="goto-home-from-signup">← Back to Portfolio</a></p>
+                </div>
+                <div class="auth-notice">
+                    <small>⚠️ Frontend demo only. Do not use real passwords.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN LOGIN PAGE -->
+    <div id="page-admin-login" class="page auth-page" style="display:none;">
+        <div class="auth-container">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <h1>Admin Login</h1>
+                    <p>Access the admin dashboard</p>
+                </div>
+                <form id="admin-login-form" class="auth-form" novalidate>
+                    <div class="form-group">
+                        <label for="admin-email">Admin Email</label>
+                        <input type="email" id="admin-email" required placeholder="admin@portfolio.com" autocomplete="email">
+                        <span class="field-error" id="admin-email-error"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="admin-password">Admin Password</label>
+                        <input type="password" id="admin-password" required placeholder="Admin password" autocomplete="current-password">
+                        <span class="field-error" id="admin-password-error"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Login as Admin</button>
+                </form>
+                <div class="auth-footer">
+                    <p><a href="#" id="goto-login-from-admin">User Login</a></p>
+                    <p><a href="#" id="goto-home-from-admin-login">← Back to Portfolio</a></p>
+                </div>
+                <div class="auth-notice">
+                    <small>⚠️ Demo credentials: admin@portfolio.com / Admin@123<br>This is a frontend-only demonstration.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== PUBLIC PORTFOLIO ========== -->
+    <div id="page-portfolio" class="page" style="display:none;">
+
+        <!-- Navigation -->
+        <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
+            <div class="nav-container">
+                <a href="#home" class="nav-logo" id="nav-logo-text">Portfolio</a>
+                <button class="hamburger" id="hamburger-btn" aria-label="Toggle navigation menu" aria-expanded="false">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                </button>
+                <ul class="nav-menu" id="nav-menu" role="menubar">
+                    <li role="none"><a href="#home" class="nav-link active" role="menuitem">Home</a></li>
+                    <li role="none"><a href="#about" class="nav-link" role="menuitem">About</a></li>
+                    <li role="none"><a href="#skills" class="nav-link" role="menuitem">Skills</a></li>
+                    <li role="none"><a href="#education" class="nav-link" role="menuitem">Education</a></li>
+                    <li role="none"><a href="#experience" class="nav-link" role="menuitem">Experience</a></li>
+                    <li role="none"><a href="#projects" class="nav-link" role="menuitem">Projects</a></li>
+                    <li role="none"><a href="#certifications" class="nav-link" role="menuitem">Certifications</a></li>
+                    <li role="none"><a href="#services" class="nav-link" role="menuitem">Services</a></li>
+                    <li role="none"><a href="#testimonials" class="nav-link" role="menuitem">Testimonials</a></li>
+                    <li role="none"><a href="#contact" class="nav-link" role="menuitem">Contact</a></li>
+                </ul>
+                <div class="nav-actions">
+                    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark/light mode" title="Toggle theme">
+                        <span class="theme-icon" id="theme-icon">🌙</span>
+                    </button>
+                    <a href="#" class="btn btn-sm btn-outline" id="nav-login-btn">Login</a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section id="home" class="hero-section">
+            <div class="hero-bg-animation" aria-hidden="true">
+                <div class="floating-shape shape-1"></div>
+                <div class="floating-shape shape-2"></div>
+                <div class="floating-shape shape-3"></div>
+                <div class="floating-shape shape-4"></div>
+                <div class="floating-shape shape-5"></div>
+            </div>
+            <div class="container hero-content">
+                <div class="hero-text">
+                    <p class="hero-greeting">Hello, I'm</p>
+                    <h1 class="hero-name" id="hero-name">Alex Johnson</h1>
+                    <h2 class="hero-title" id="hero-title">Aspiring Software Developer</h2>
+                    <p class="hero-tagline" id="hero-tagline">Building elegant solutions through code. Passionate about web development, open-source, and continuous learning.</p>
+                    <div class="hero-buttons">
+                        <a href="#projects" class="btn btn-primary">View My Work</a>
+                        <a href="#" class="btn btn-outline" id="hero-resume-btn">Download Resume</a>
+                    </div>
+                    <div class="hero-social" id="hero-social"></div>
+                </div>
+                <div class="hero-image-wrapper">
+                    <div class="hero-image-container">
+                        <img src="" alt="Profile photo" id="hero-profile-img" class="hero-profile-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                        <div class="hero-avatar-fallback" id="hero-avatar-fallback">AJ</div>
+                    </div>
+                    <div class="hero-status" id="hero-status">
+                        <span class="status-dot"></span>
+                        <span>Available for opportunities</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="section">
+            <div class="container">
+                <h2 class="section-title">About Me</h2>
+                <div class="about-grid">
+                    <div class="about-image-col">
+                        <img src="" alt="About me photo" id="about-profile-img" class="about-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                        <div class="about-avatar-fallback" id="about-avatar-fallback">AJ</div>
+                    </div>
+                    <div class="about-text-col">
+                        <p class="about-bio" id="about-bio"></p>
+                        <div class="about-details" id="about-details"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="section section-alt">
+            <div class="container">
+                <h2 class="section-title">Technical Skills</h2>
+                <div class="skills-filter" id="skills-filter"></div>
+                <div class="skills-grid" id="skills-grid"></div>
+            </div>
+        </section>
+
+        <!-- Education Section -->
+        <section id="education" class="section">
+            <div class="container">
+                <h2 class="section-title">Education</h2>
+                <div class="timeline" id="education-timeline"></div>
+            </div>
+        </section>
+
+        <!-- Experience Section -->
+        <section id="experience" class="section section-alt">
+            <div class="container">
+                <h2 class="section-title">Experience</h2>
+                <div class="timeline" id="experience-timeline"></div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="section">
+            <div class="container">
+                <h2 class="section-title">Projects</h2>
+                <div class="projects-toolbar">
+                    <div class="projects-search">
+                        <input type="text" id="project-search-input" placeholder="Search projects..." aria-label="Search projects">
+                    </div>
+                    <div class="projects-filter" id="projects-filter"></div>
+                </div>
+                <div class="projects-grid" id="projects-grid"></div>
+            </div>
+        </section>
+
+        <!-- Certifications Section -->
+        <section id="certifications" class="section section-alt">
+            <div class="container">
+                <h2 class="section-title">Certifications</h2>
+                <div class="certs-grid" id="certs-grid"></div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="section">
+            <div class="container">
+                <h2 class="section-title">Services</h2>
+                <div class="services-grid" id="services-grid"></div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section id="testimonials" class="section section-alt">
+            <div class="container">
+                <h2 class="section-title">Testimonials</h2>
+                <div class="testimonials-grid" id="testimonials-grid"></div>
+            </div>
+        </section>
+
+        <!-- Resume Section -->
+        <section id="resume" class="section">
+            <div class="container">
+                <h2 class="section-title">Resume</h2>
+                <div class="resume-section-content" id="resume-section-content">
+                    <div class="resume-card">
+                        <div class="resume-icon">📄</div>
+                        <h3>Download My Resume</h3>
+                        <p>Get a detailed overview of my education, skills, and experience.</p>
+                        <a href="#" class="btn btn-primary" id="resume-download-btn" target="_blank" rel="noopener noreferrer">Download Resume</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="section section-alt">
+            <div class="container">
+                <h2 class="section-title">Get In Touch</h2>
+                <div class="contact-grid">
+                    <div class="contact-info" id="contact-info"></div>
+                    <div class="contact-form-wrapper">
+                        <form id="contact-form" class="contact-form" novalidate>
+                            <div class="form-group">
+                                <label for="contact-name">Your Name</label>
+                                <input type="text" id="contact-name" required placeholder="John Doe" maxlength="100">
+                                <span class="field-error" id="contact-name-error"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-email">Your Email</label>
+                                <input type="email" id="contact-email" required placeholder="john@example.com">
+                                <span class="field-error" id="contact-email-error"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-subject">Subject</label>
+                                <input type="text" id="contact-subject" required placeholder="Subject" maxlength="200">
+                                <span class="field-error" id="contact-subject-error"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-message">Message</label>
+                                <textarea id="contact-message" rows="5" required placeholder="Your message..." maxlength="2000"></textarea>
+                                <span class="field-error" id="contact-message-error"></span>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer" id="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-info">
+                        <h3 id="footer-name">Alex Johnson</h3>
+                        <p id="footer-text">Aspiring Software Developer</p>
+                    </div>
+                    <div class="footer-social" id="footer-social"></div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; <span id="footer-year"></span> <span id="footer-copyright-name">Alex Johnson</span>. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Back to top -->
+        <button class="back-to-top" id="back-to-top" aria-label="Back to top" title="Back to top">↑</button>
+    </div>
+
+    <!-- ========== ADMIN DASHBOARD ========== -->
+    <div id="page-admin" class="page admin-page" style="display:none;">
+        <div class="admin-layout">
+            <!-- Admin Sidebar -->
+            <aside class="admin-sidebar" id="admin-sidebar">
+                <div class="admin-sidebar-header">
+                    <h2>Admin Panel</h2>
+                    <button class="admin-sidebar-close" id="admin-sidebar-close" aria-label="Close sidebar">&times;</button>
+                </div>
+                <nav class="admin-nav" aria-label="Admin navigation">
+                    <a href="#" class="admin-nav-link active" data-section="admin-dashboard">📊 Dashboard</a>
+                    <a href="#" class="admin-nav-link" data-section="admin-profile">👤 Profile</a>
+                    <a href="#" class="admin-nav-link" data-section="admin-skills">🛠️ Skills</a>
+                    <a href="#" class="admin-nav-link" data-section="admin-projects">📁 Projects</a>
+                    <a href="#" class="admin-nav-link" data-section="admin-education">🎓 Education</a>
+                    <a href="#" class="admin-nav-link" data-section="admin-experience">💼 Experience</a>
+                    <a href="#" class="admin-nav-link" data-section="admin-certifications">📜 Certifications</a>
+                    <a href="#" class="admin-nav-link" data-section="admin-services">⚙️ Services</a>
+                    <a href="#" class="admin-nav-link" data-section="admin-testimonials">💬 Testimonials</a>
+                    <a href="#" class="admin-nav-link" data-section="admin-messages">📧 Messages</a>
+                    <a href="#" class="admin-nav-link" data-section="admin-settings">🔧 Settings</a>
+                </nav>
+                <div class="admin-sidebar-footer">
+                    <a href="#" class="admin-nav-link" id="admin-view-site">🌐 View Site</a>
+                    <a href="#" class="admin-nav-link" id="admin-logout-btn">🚪 Logout</a>
+                </div>
+            </aside>
+
+            <!-- Admin Main Content -->
+            <main class="admin-main">
+                <header class="admin-header">
+                    <button class="admin-menu-toggle" id="admin-menu-toggle" aria-label="Toggle admin menu">☰</button>
+                    <h1 id="admin-page-title">Dashboard</h1>
+                    <div class="admin-header-actions">
+                        <span id="admin-user-label">Admin</span>
+                    </div>
+                </header>
+
+                <div class="admin-content" id="admin-content">
+
+                    <!-- DASHBOARD -->
+                    <div class="admin-section" id="admin-dashboard">
+                        <div class="dashboard-stats" id="dashboard-stats"></div>
+                        <div class="dashboard-recent">
+                            <h3>Recent Messages</h3>
+                            <div id="dashboard-recent-messages"></div>
+                        </div>
+                        <div class="dashboard-actions">
+                            <h3>Quick Actions</h3>
+                            <div class="quick-actions-grid">
+                                <button class="btn btn-primary" data-goto="admin-projects">Add Project</button>
+                                <button class="btn btn-primary" data-goto="admin-skills">Add Skill</button>
+                                <button class="btn btn-primary" data-goto="admin-profile">Edit Profile</button>
+                                <button class="btn btn-primary" data-goto="admin-messages">View Messages</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PROFILE MANAGEMENT -->
+                    <div class="admin-section" id="admin-profile" style="display:none;">
+                        <form id="profile-form" novalidate>
+                            <div class="admin-form-grid">
+                                <div class="form-group">
+                                    <label for="pf-name">Full Name</label>
+                                    <input type="text" id="pf-name" required maxlength="100">
+                                    <span class="field-error" id="pf-name-error"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="pf-title">Professional Title</label>
+                                    <input type="text" id="pf-title" required maxlength="100">
+                                    <span class="field-error" id="pf-title-error"></span>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label for="pf-tagline">Tagline</label>
+                                    <textarea id="pf-tagline" rows="2" maxlength="300"></textarea>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label for="pf-bio">Biography</label>
+                                    <textarea id="pf-bio" rows="4" maxlength="2000"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="pf-location">Location</label>
+                                    <input type="text" id="pf-location" maxlength="100">
+                                </div>
+                                <div class="form-group">
+                                    <label for="pf-email">Email</label>
+                                    <input type="email" id="pf-email" required>
+                                    <span class="field-error" id="pf-email-error"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="pf-phone">Phone</label>
+                                    <input type="text" id="pf-phone" maxlength="20">
+                                </div>
+                                <div class="form-group">
+                                    <label for="pf-image">Profile Image URL</label>
+                                    <input type="url" id="pf-image" placeholder="https://...">
+                                </div>
+                                <div class="form-group">
+                                    <label for="pf-resume">Resume URL</label>
+                                    <input type="url" id="pf-resume" placeholder="https://...">
+                                </div>
+                                <div class="form-group">
+                                    <label for="pf-github">GitHub URL</label>
+                                    <input type="url" id="pf-github" placeholder="https://github.com/...">
+                                </div>
+                                <div class="form-group">
+                                    <label for="pf-linkedin">LinkedIn URL</label>
+                                    <input type="url" id="pf-linkedin" placeholder="https://linkedin.com/in/...">
+                                </div>
+                                <div class="form-group">
+                                    <label for="pf-instagram">Instagram URL</label>
+                                    <input type="url" id="pf-instagram" placeholder="https://instagram.com/...">
+                                </div>
+                                <div class="form-group">
+                                    <label for="pf-youtube">YouTube URL</label>
+                                    <input type="url" id="pf-youtube" placeholder="https://youtube.com/...">
+                                </div>
+                                <div class="form-group">
+                                    <label for="pf-availability">Availability Status</label>
+                                    <select id="pf-availability">
+                                        <option value="available">Available for opportunities</option>
+                                        <option value="busy">Currently busy</option>
+                                        <option value="not-available">Not available</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="pf-interests">Personal Interests</label>
+                                    <input type="text" id="pf-interests" placeholder="Coding, Music, Travel" maxlength="300">
+                                </div>
+                                <div class="form-group">
+                                    <label for="pf-goals">Career Goals</label>
+                                    <input type="text" id="pf-goals" placeholder="Your career goals" maxlength="500">
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Save Profile</button>
+                                <button type="button" class="btn btn-secondary" id="pf-reset-btn">Reset</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- SKILLS MANAGEMENT -->
+                    <div class="admin-section" id="admin-skills" style="display:none;">
+                        <div class="admin-toolbar">
+                            <button class="btn btn-primary" id="add-skill-btn">+ Add Skill</button>
+                            <input type="text" id="skill-search" placeholder="Search skills..." aria-label="Search skills" class="admin-search">
+                        </div>
+                        <div id="skill-form-area" style="display:none;">
+                            <form id="skill-form" novalidate>
+                                <input type="hidden" id="skill-edit-id">
+                                <div class="admin-form-grid">
+                                    <div class="form-group">
+                                        <label for="sk-name">Skill Name</label>
+                                        <input type="text" id="sk-name" required maxlength="100">
+                                        <span class="field-error" id="sk-name-error"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="sk-category">Category</label>
+                                        <select id="sk-category" required>
+                                            <option value="">Select category</option>
+                                            <option value="Programming Languages">Programming Languages</option>
+                                            <option value="Web Technologies">Web Technologies</option>
+                                            <option value="Tools and Platforms">Tools and Platforms</option>
+                                            <option value="Databases">Databases</option>
+                                            <option value="Other Skills">Other Skills</option>
+                                        </select>
+                                        <span class="field-error" id="sk-category-error"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="sk-level">Skill Level (%)</label>
+                                        <input type="number" id="sk-level" min="0" max="100" value="50" required>
+                                        <span class="field-error" id="sk-level-error"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="sk-icon">Icon/Emoji</label>
+                                        <input type="text" id="sk-icon" maxlength="10" placeholder="💻">
+                                    </div>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary">Save Skill</button>
+                                    <button type="button" class="btn btn-secondary" id="cancel-skill-btn">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="admin-table-wrapper">
+                            <table class="admin-table" id="skills-table">
+                                <thead>
+                                    <tr>
+                                        <th>Icon</th>
+                                        <th>Skill</th>
+                                        <th>Category</th>
+                                        <th>Level</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="skills-tbody"></tbody>
+                            </table>
+                            <div class="empty-state" id="skills-empty" style="display:none;">
+                                <p>No skills added yet. Click "Add Skill" to get started.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PROJECTS MANAGEMENT -->
+                    <div class="admin-section" id="admin-projects" style="display:none;">
+                        <div class="admin-toolbar">
+                            <button class="btn btn-primary" id="add-project-btn">+ Add Project</button>
+                            <input type="text" id="admin-project-search" placeholder="Search projects..." aria-label="Search projects" class="admin-search">
+                        </div>
+                        <div id="project-form-area" style="display:none;">
+                            <form id="project-form" novalidate>
+                                <input type="hidden" id="proj-edit-id">
+                                <div class="admin-form-grid">
+                                    <div class="form-group">
+                                        <label for="proj-title">Project Title</label>
+                                        <input type="text" id="proj-title" required maxlength="150">
+                                        <span class="field-error" id="proj-title-error"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="proj-category">Category</label>
+                                        <input type="text" id="proj-category" required maxlength="50" placeholder="e.g., Web App">
+                                        <span class="field-error" id="proj-category-error"></span>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label for="proj-desc">Description</label>
+                                        <textarea id="proj-desc" rows="3" required maxlength="1000"></textarea>
+                                        <span class="field-error" id="proj-desc-error"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="proj-image">Image URL</label>
+                                        <input type="url" id="proj-image" placeholder="https://...">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="proj-tech">Technologies (comma-separated)</label>
+                                        <input type="text" id="proj-tech" placeholder="HTML, CSS, JS" maxlength="300">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="proj-github">GitHub URL</label>
+                                        <input type="url" id="proj-github" placeholder="https://github.com/...">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="proj-demo">Live Demo URL</label>
+                                        <input type="url" id="proj-demo" placeholder="https://...">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="proj-featured">
+                                            <input type="checkbox" id="proj-featured"> Featured Project
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary">Save Project</button>
+                                    <button type="button" class="btn btn-secondary" id="cancel-project-btn">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="admin-table-wrapper">
+                            <table class="admin-table" id="projects-table">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Category</th>
+                                        <th>Featured</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="projects-tbody"></tbody>
+                            </table>
+                            <div class="empty-state" id="projects-empty" style="display:none;">
+                                <p>No projects added yet.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- EDUCATION MANAGEMENT -->
+                    <div class="admin-section" id="admin-education" style="display:none;">
+                        <div class="admin-toolbar">
+                            <button class="btn btn-primary" id="add-edu-btn">+ Add Education</button>
+                        </div>
+                        <div id="edu-form-area" style="display:none;">
+                            <form id="edu-form" novalidate>
+                                <input type="hidden" id="edu-edit-id">
+                                <div class="admin-form-grid">
+                                    <div class="form-group">
+                                        <label for="edu-degree">Degree / Course</label>
+                                        <input type="text" id="edu-degree" required maxlength="200">
+                                        <span class="field-error" id="edu-degree-error"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="edu-institution">Institution</label>
+                                        <input type="text" id="edu-institution" required maxlength="200">
+                                        <span class="field-error" id="edu-institution-error"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="edu-start">Start Year</label>
+                                        <input type="text" id="edu-start" required maxlength="10" placeholder="2020">
+                                        <span class="field-error" id="edu-start-error"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="edu-end">End Year</label>
+                                        <input type="text" id="edu-end" maxlength="10" placeholder="2024 or Present">
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label for="edu-desc">Description</label>
+                                        <textarea id="edu-desc" rows="3" maxlength="1000"></textarea>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label for="edu-achievements">Achievements</label>
+                                        <textarea id="edu-achievements" rows="2" maxlength="500" placeholder="Dean's list, GPA 3.8, etc."></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary">Save Education</button>
+                                    <button type="button" class="btn btn-secondary" id="cancel-edu-btn">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="admin-table-wrapper">
+                            <table class="admin-table" id="edu-table">
+                                <thead>
+                                    <tr><th>Degree</th><th>Institution</th><th>Year</th><th>Actions</th></tr>
+                                </thead>
+                                <tbody id="edu-tbody"></tbody>
+                            </table>
+                            <div class="empty-state" id="edu-empty" style="display:none;"><p>No education records.</p></div>
+                        </div>
+                    </div>
+
+                    <!-- EXPERIENCE MANAGEMENT -->
+                    <div class="admin-section" id="admin-experience" style="display:none;">
+                        <div class="admin-toolbar">
+                            <button class="btn btn-primary" id="add-exp-btn">+ Add Experience</button>
+                        </div>
+                        <div id="exp-form-area" style="display:none;">
+                            <form id="exp-form" novalidate>
+                                <input type="hidden" id="exp-edit-id">
+                                <div class="admin-form-grid">
+                                    <div class="form-group">
+                                        <label for="exp-role">Job Title / Role</label>
+                                        <input type="text" id="exp-role" required maxlength="200">
+                                        <span class="field-error" id="exp-role-error"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exp-org">Organization</label>
+                                        <input type="text" id="exp-org" required maxlength="200">
+                                        <span class="field-error" id="exp-org-error"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exp-duration">Duration</label>
+                                        <input type="text" id="exp-duration" required maxlength="50" placeholder="Jun 2023 - Aug 2023">
+                                        <span class="field-error" id="exp-duration-error"></span>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label for="exp-responsibilities">Responsibilities</label>
+                                        <textarea id="exp-responsibilities" rows="3" maxlength="1000"></textarea>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label for="exp-achievements">Achievements</label>
+                                        <textarea id="exp-achievements" rows="2" maxlength="500"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary">Save Experience</button>
+                                    <button type="button" class="btn btn-secondary" id="cancel-exp-btn">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="admin-table-wrapper">
+                            <table class="admin-table" id="exp-table">
+                                <thead>
+                                    <tr><th>Role</th><th>Organization</th><th>Duration</th><th>Actions</th></tr>
+                                </thead>
+                                <tbody id="exp-tbody"></tbody>
+                            </table>
+                            <div class="empty-state" id="exp-empty" style="display:none;"><p>No experience records.</p></div>
+                        </div>
+                    </div>
+
+                    <!-- CERTIFICATIONS MANAGEMENT -->
+                    <div class="admin-section" id="admin-certifications" style="display:none;">
+                        <div class="admin-toolbar">
+                            <button class="btn btn-primary" id="add-cert-btn">+ Add Certification</button>
+                        </div>
+                        <div id="cert-form-area" style="display:none;">
+                            <form id="cert-form" novalidate>
+                                <input type="hidden" id="cert-edit-id">
+                                <div class="admin-form-grid">
+                                    <div class="form-group">
+                                        <label for="cert-title">Certificate Title</label>
+                                        <input type="text" id="cert-title" required maxlength="200">
+                                        <span class="field-error" id="cert-title-error"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cert-org">Issuing Organization</label>
+                                        <input type="text" id="cert-org" required maxlength="200">
+                                        <span class="field-error" id="cert-org-error"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cert-date">Date</label>
+                                        <input type="text" id="cert-date" required maxlength="20" placeholder="Mar 2024">
+                                        <span class="field-error" id="cert-date-error"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cert-url">Credential URL</label>
+                                        <input type="url" id="cert-url" placeholder="https://...">
+                                    </div>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary">Save Certificate</button>
+                                    <button type="button" class="btn btn-secondary" id="cancel-cert-btn">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="admin-table-wrapper">
+                            <table class="admin-table" id="cert-table">
+                                <thead>
+                                    <tr><th>Title</th><th>Organization</th><th>Date</th><th>Actions</th></tr>
+                                </thead>
+                                <tbody id="cert-tbody"></tbody>
+                            </table>
+                            <div class="empty-state" id="cert-empty" style="display:none;"><p>No certifications.</p></div>
+                        </div>
+                    </div>
+
+                    <!-- SERVICES MANAGEMENT -->
+                    <div class="admin-section" id="admin-services" style="display:none;">
+                        <div class="admin-toolbar">
+                            <button class="btn btn-primary" id="add-svc-btn">+ Add Service</button>
+                        </div>
+                        <div id="svc-form-area" style="display:none;">
+                            <form id="svc-form" novalidate>
+                                <input type="hidden" id="svc-edit-id">
+                                <div class="admin-form-grid">
+                                    <div class="form-group">
+                                        <label for="svc-title">Service Title</label>
+                                        <input type="text" id="svc-title" required maxlength="100">
+                                        <span class="field-error" id="svc-title-error"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="svc-icon">Icon/Emoji</label>
+                                        <input type="text" id="svc-icon" maxlength="10" placeholder="🌐">
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label for="svc-desc">Description</label>
+                                        <textarea id="svc-desc" rows="3" required maxlength="500"></textarea>
+                                        <span class="field-error" id="svc-desc-error"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="svc-active">
+                                            <input type="checkbox" id="svc-active" checked> Display on site
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary">Save Service</button>
+                                    <button type="button" class="btn btn-secondary" id="cancel-svc-btn">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="admin-table-wrapper">
+                            <table class="admin-table" id="svc-table">
+                                <thead>
+                                    <tr><th>Icon</th><th>Service</th><th>Active</th><th>Actions</th></tr>
+                                </thead>
+                                <tbody id="svc-tbody"></tbody>
+                            </table>
+                            <div class="empty-state" id="svc-empty" style="display:none;"><p>No services.</p></div>
+                        </div>
+                    </div>
+
+                    <!-- TESTIMONIALS MANAGEMENT -->
+                    <div class="admin-section" id="admin-testimonials" style="display:none;">
+                        <div class="admin-toolbar">
+                            <button class="btn btn-primary" id="add-test-btn">+ Add Testimonial</button>
+                        </div>
+                        <div id="test-form-area" style="display:none;">
+                            <form id="test-form" novalidate>
+                                <input type="hidden" id="test-edit-id">
+                                <div class="admin-form-grid">
+                                    <div class="form-group">
+                                        <label for="test-name">Person Name</label>
+                                        <input type="text" id="test-name" required maxlength="100">
+                                        <span class="field-error" id="test-name-error"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="test-role">Role</label>
+                                        <input type="text" id="test-role" required maxlength="100">
+                                        <span class="field-error" id="test-role-error"></span>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label for="test-message">Message</label>
+                                        <textarea id="test-message" rows="3" required maxlength="500"></textarea>
+                                        <span class="field-error" id="test-message-error"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="test-image">Profile Image URL</label>
+                                        <input type="url" id="test-image" placeholder="https://...">
+                                    </div>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary">Save Testimonial</button>
+                                    <button type="button" class="btn btn-secondary" id="cancel-test-btn">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="admin-table-wrapper">
+                            <table class="admin-table" id="test-table">
+                                <thead>
+                                    <tr><th>Name</th><th>Role</th><th>Message</th><th>Actions</th></tr>
+                                </thead>
+                                <tbody id="test-tbody"></tbody>
+                            </table>
+                            <div class="empty-state" id="test-empty" style="display:none;"><p>No testimonials.</p></div>
+                        </div>
+                    </div>
+
+                    <!-- MESSAGES MANAGEMENT -->
+                    <div class="admin-section" id="admin-messages" style="display:none;">
+                        <div class="admin-toolbar">
+                            <input type="text" id="msg-search" placeholder="Search messages..." aria-label="Search messages" class="admin-search">
+                        </div>
+                        <div class="admin-table-wrapper">
+                            <table class="admin-table" id="msg-table">
+                                <thead>
+                                    <tr><th>Name</th><th>Email</th><th>Subject</th><th>Status</th><th>Actions</th></tr>
+                                </thead>
+                                <tbody id="msg-tbody"></tbody>
+                            </table>
+                            <div class="empty-state" id="msg-empty" style="display:none;"><p>No messages received.</p></div>
+                        </div>
+                    </div>
+
+                    <!-- SETTINGS -->
+                    <div class="admin-section" id="admin-settings" style="display:none;">
+                        <form id="settings-form" novalidate>
+                            <div class="admin-form-grid">
+                                <div class="form-group">
+                                    <label for="set-primary">Primary Color</label>
+                                    <input type="color" id="set-primary" value="#6c63ff">
+                                </div>
+                                <div class="form-group">
+                                    <label for="set-secondary">Secondary Color</label>
+                                    <input type="color" id="set-secondary" value="#00c2ff">
+                                </div>
+                                <div class="form-group">
+                                    <label for="set-font">Font Preference</label>
+                                    <select id="set-font">
+                                        <option value="system-ui, -apple-system, sans-serif">System Default</option>
+                                        <option value="Georgia, 'Times New Roman', serif">Serif</option>
+                                        <option value="'Courier New', Courier, monospace">Monospace</option>
+                                        <option value="Verdana, Geneva, sans-serif">Verdana</option>
+                                        <option value="'Trebuchet MS', sans-serif">Trebuchet</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="set-darkmode">
+                                        <input type="checkbox" id="set-darkmode" checked> Dark Mode Default
+                                    </label>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label for="set-footer">Footer Text</label>
+                                    <input type="text" id="set-footer" maxlength="200">
+                                </div>
+                            </div>
+                            <h3 style="margin-top:1.5rem;">Section Visibility</h3>
+                            <div class="settings-toggles" id="section-toggles">
+                                <label><input type="checkbox" data-section-toggle="about" checked> About</label>
+                                <label><input type="checkbox" data-section-toggle="skills" checked> Skills</label>
+                                <label><input type="checkbox" data-section-toggle="education" checked> Education</label>
+                                <label><input type="checkbox" data-section-toggle="experience" checked> Experience</label>
+                                <label><input type="checkbox" data-section-toggle="projects" checked> Projects</label>
+                                <label><input type="checkbox" data-section-toggle="certifications" checked> Certifications</label>
+                                <label><input type="checkbox" data-section-toggle="services" checked> Services</label>
+                                <label><input type="checkbox" data-section-toggle="testimonials" checked> Testimonials</label>
+                                <label><input type="checkbox" data-section-toggle="resume" checked> Resume</label>
+                                <label><input type="checkbox" data-section-toggle="contact" checked> Contact</label>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Save Settings</button>
+                                <button type="button" class="btn btn-danger" id="reset-all-data-btn">Reset All Data to Demo</button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

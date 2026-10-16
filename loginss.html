@@ -1,0 +1,281 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Portfolio Login</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+
+            height: 100vh;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 350px;
+            background: white;
+            padding: 30px;
+
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #555;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+
+            border: none;
+            border-radius: 5px;
+
+            background: #667eea;
+            color: white;
+
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #5568d8;
+        }
+
+        p {
+            margin-top: 15px;
+        }
+
+        a {
+            color: #667eea;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .message {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        #signupPage {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- LOGIN PAGE -->
+
+    <div class="container" id="loginPage">
+
+        <h1>My Portfolio</h1>
+        <h2>Login</h2>
+
+        <input type="email" id="loginEmail" placeholder="Enter Email">
+
+        <input type="password" id="loginPassword" placeholder="Enter Password">
+
+        <button onclick="login()">Login</button>
+
+        <div class="message" id="loginMessage"></div>
+
+        <p>
+            Don't have an account?
+            <a onclick="showSignup()">Signup</a>
+        </p>
+
+    </div>
+
+
+    <!-- SIGNUP PAGE -->
+
+    <div class="container" id="signupPage">
+
+        <h1>My Portfolio</h1>
+        <h2>Signup</h2>
+
+        <input type="text" id="signupName" placeholder="Enter Name">
+
+        <input type="email" id="signupEmail" placeholder="Enter Email">
+
+        <input type="password" id="signupPassword" placeholder="Create Password">
+
+        <button onclick="signup()">Signup</button>
+
+        <div class="message" id="signupMessage"></div>
+
+        <p>
+            Already have an account?
+            <a onclick="showLogin()">Login</a>
+        </p>
+
+    </div>
+
+
+    <script>
+
+        // SHOW SIGNUP PAGE
+
+        function showSignup() {
+
+            document.getElementById("loginPage").style.display = "none";
+
+            document.getElementById("signupPage").style.display = "block";
+        }
+
+
+        // SHOW LOGIN PAGE
+
+        function showLogin() {
+
+            document.getElementById("signupPage").style.display = "none";
+
+            document.getElementById("loginPage").style.display = "block";
+        }
+
+
+        // SIGNUP FUNCTION
+
+        function signup() {
+
+            let name = document.getElementById("signupName").value;
+
+            let email = document.getElementById("signupEmail").value;
+
+            let password = document.getElementById("signupPassword").value;
+
+            let message = document.getElementById("signupMessage");
+
+
+            if (name === "" || email === "" || password === "") {
+
+                message.innerHTML = "Please fill all details.";
+
+                message.style.color = "red";
+
+                return;
+            }
+
+
+            // Store data in Local Storage
+
+            localStorage.setItem("name", name);
+
+            localStorage.setItem("email", email);
+
+            localStorage.setItem("password", password);
+
+
+            message.innerHTML = "Signup Successful!";
+
+            message.style.color = "green";
+
+
+            // Clear input fields
+
+            document.getElementById("signupName").value = "";
+
+            document.getElementById("signupEmail").value = "";
+
+            document.getElementById("signupPassword").value = "";
+
+
+            // Go to login page
+
+            setTimeout(function() {
+
+                showLogin();
+
+            }, 1000);
+        }
+
+
+        // LOGIN FUNCTION
+
+        function login() {
+
+            let email = document.getElementById("loginEmail").value;
+
+            let password = document.getElementById("loginPassword").value;
+
+            let message = document.getElementById("loginMessage");
+
+
+            // Get data from Local Storage
+
+            let storedEmail = localStorage.getItem("email");
+
+            let storedPassword = localStorage.getItem("password");
+
+
+            if (email === "" || password === "") {
+
+                message.innerHTML = "Please enter all details.";
+
+                message.style.color = "red";
+
+                return;
+            }
+
+
+            if (email === storedEmail && password === storedPassword) {
+
+                message.innerHTML = "Login Successful!";
+
+                message.style.color = "green";
+
+
+                setTimeout(function() {
+
+                    alert("Welcome to My Portfolio!");
+
+                }, 500);
+
+            }
+
+            else {
+
+                message.innerHTML = "Invalid Email or Password.";
+
+                message.style.color = "red";
+            }
+        }
+
+    </script>
+
+</body>
+</html>
+
